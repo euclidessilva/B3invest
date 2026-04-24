@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 const stocksRouter = require('./routes/stocks');
 const dividendsRouter = require('./routes/dividends');
@@ -19,16 +20,25 @@ app.use(cors({
 
 app.use(express.json());
 
+// Health check (útil pro Render)
+app.get('/api/health', (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
+
 app.use('/api/auth', authRouter);
 app.use('/api/stocks', stocksRouter);
 app.use('/api/dividends', dividendsRouter);
 
-if (process.env.NODE_ENV === 'production') {
-  const buildPath = path.join(__dirname, '../client/build');
+// Serve React build sempre que existir (funciona em prod e standalone)
+const buildPath = path.join(__dirname, '../client/build');
+const indexHtml = path.join(buildPath, 'index.html');
+if (fs.existsSync(indexHtml)) {
+  console.log(`[server] servindo React build de ${buildPath}`);
   app.use(express.static(buildPath));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(buildPath, 'index.html'));
-  });
+  app.get('*', (req, res) => res.sendFile(indexHtml));
+} else {
+  console.warn(`[server] client/build não encontrado — apenas API está ativa.`);
+  app.get('/', (_req, res) =>
+    res.status(503).send('B3 Invest: build do React ausente. Execute "npm run build".')
+  );
 }
 
 app.listen(PORT, () => {
