@@ -4,13 +4,13 @@
   "description": "Gerenciador de Carteira da Bolsa de Valores Brasileira",
   "main": "server/index.js",
   "scripts": {
-    "install:all": "npm install && cd client && npm install --legacy-peer-deps",
+    "install:all": "npm install && npm --prefix client install --legacy-peer-deps",
     "start": "node server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon server/index.js",
-    "client": "cd client && npm start",
-    "build": "cd client && npm install --legacy-peer-deps && npm run build",
-    "postinstall": "cd client && npm install --legacy-peer-deps"
+    "client": "npm --prefix client start",
+    "build": "npm --prefix client run build",
+    "render-build": "npm install && npm --prefix client install --legacy-peer-deps && npm --prefix client run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
@@ -23,5 +23,8 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
