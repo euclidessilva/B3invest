@@ -5,6 +5,7 @@ const path = require('path');
 
 const stocksRouter = require('./routes/stocks');
 const dividendsRouter = require('./routes/dividends');
+const authRouter = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -18,6 +19,7 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use('/api/auth', authRouter);
 app.use('/api/stocks', stocksRouter);
 app.use('/api/dividends', dividendsRouter);
 

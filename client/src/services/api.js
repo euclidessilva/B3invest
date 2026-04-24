@@ -30,4 +30,8 @@ export const getDividends = () => api.get('/api/dividends');
 export const addDividend = (payload) => api.post('/api/dividends', payload);
 export const getUpcomingDividends = () => api.get('/api/dividends/upcoming');
 
+// Auth
+export const validateInviteKey = (inviteKey) =>
+  api.post('/api/auth/validate-invite', { inviteKey });
+
 export default api;

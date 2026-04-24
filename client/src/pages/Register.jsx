@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { validateInviteKey } from '../services/api';
 
 export function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [inviteKey, setInviteKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -16,14 +18,22 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (!inviteKey.trim()) { setError('A chave de convite é obrigatória.'); return; }
     if (password !== confirm) { setError('As senhas não coincidem.'); return; }
     if (password.length < 6) { setError('A senha deve ter pelo menos 6 caracteres.'); return; }
+
     setLoading(true);
     try {
+      // Validar chave de convite no servidor
+      await validateInviteKey(inviteKey.trim());
+
+      // Se a chave for válida, prosseguir com o cadastro
       await signUp(email, password, name);
       setSuccess('Conta criada! Verifique seu e-mail para confirmar o cadastro.');
     } catch (err) {
-      setError(err.message || 'Erro ao criar conta. Tente novamente.');
+      const msg = err.response?.data?.error || err.message || 'Erro ao criar conta. Tente novamente.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -56,6 +66,28 @@ export function Register() {
 
             {!success && (
               <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label className="form-label">Chave de Convite</label>
+                  <div className="input-group">
+                    <svg className="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                    </svg>
+                    <input
+                      id="invite-key-input"
+                      className="input-field"
+                      type="text"
+                      value={inviteKey}
+                      onChange={(e) => setInviteKey(e.target.value)}
+                      placeholder="Digite sua chave de convite"
+                      required
+                      autoComplete="off"
+                    />
+                  </div>
+                  <span className="invite-hint">Solicite uma chave de convite ao administrador</span>
+                </div>
+
+                <div className="invite-divider" />
+
                 <div className="form-group">
                   <label className="form-label">Nome Completo</label>
                   <input className="input-field" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome" required />
