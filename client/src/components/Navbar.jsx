@@ -3,7 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useState } from 'react';
 
 export function Navbar() {
-  const { user, signOut } = useAuth();
+  const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -34,6 +34,11 @@ export function Navbar() {
           <NavLink to="/proventos" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
             Proventos
           </NavLink>
+          {isAdmin && (
+            <NavLink to="/admin" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} style={{ color: '#ffb4ab' }}>
+              Admin
+            </NavLink>
+          )}
         </div>
 
         <div className="nav-actions">

@@ -7,6 +7,7 @@ const fs = require('fs');
 const stocksRouter = require('./routes/stocks');
 const dividendsRouter = require('./routes/dividends');
 const authRouter = require('./routes/auth');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -24,6 +25,7 @@ app.use(express.json());
 app.get('/api/health', (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
 app.use('/api/auth', authRouter);
+app.use('/api/admin', adminRouter);
 app.use('/api/stocks', stocksRouter);
 app.use('/api/dividends', dividendsRouter);
 

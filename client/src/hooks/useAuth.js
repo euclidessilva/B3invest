@@ -1,10 +1,12 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '../services/supabase';
+import { getMe } from '../services/api';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,6 +21,13 @@ export function AuthProvider({ children }) {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!user) { setIsAdmin(false); return; }
+    getMe()
+      .then(({ data }) => setIsAdmin(!!data.isAdmin))
+      .catch(() => setIsAdmin(false));
+  }, [user]);
 
   const signIn = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -46,7 +55,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, resetPassword }}>
+    <AuthContext.Provider value={{ user, isAdmin, loading, signIn, signUp, signOut, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

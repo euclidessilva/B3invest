@@ -7,6 +7,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Stocks } from './pages/Stocks';
 import { Allocation } from './pages/Allocation';
 import { Dividends } from './pages/Dividends';
+import { Admin } from './pages/Admin';
 import './styles/global.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/acoes" element={<ProtectedRoute><Stocks /></ProtectedRoute>} />
           <Route path="/alocacao" element={<ProtectedRoute><Allocation /></ProtectedRoute>} />
           <Route path="/proventos" element={<ProtectedRoute><Dividends /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

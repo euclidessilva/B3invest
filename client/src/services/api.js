@@ -33,5 +33,12 @@ export const getUpcomingDividends = () => api.get('/api/dividends/upcoming');
 // Auth
 export const validateInviteKey = (inviteKey) =>
   api.post('/api/auth/validate-invite', { inviteKey });
+export const getMe = () => api.get('/api/auth/me');
+
+// Admin
+export const adminListUsers = () => api.get('/api/admin/users');
+export const adminUpdatePassword = (id, password) =>
+  api.patch(`/api/admin/users/${id}/password`, { password });
+export const adminDeleteUser = (id) => api.delete(`/api/admin/users/${id}`);
 
 export default api;

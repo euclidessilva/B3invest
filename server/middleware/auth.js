@@ -26,4 +26,23 @@ async function authenticate(req, res, next) {
   }
 }
 
-module.exports = { authenticate, supabase };
+function adminEmails() {
+  return (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function isAdminEmail(email) {
+  if (!email) return false;
+  return adminEmails().includes(email.toLowerCase());
+}
+
+function requireAdmin(req, res, next) {
+  if (!isAdminEmail(req.user?.email)) {
+    return res.status(403).json({ error: 'Acesso restrito a administradores.' });
+  }
+  next();
+}
+
+module.exports = { authenticate, requireAdmin, isAdminEmail, supabase };
