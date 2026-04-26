@@ -8,6 +8,7 @@ import { Stocks } from './pages/Stocks';
 import { Allocation } from './pages/Allocation';
 import { Dividends } from './pages/Dividends';
 import { Admin } from './pages/Admin';
+import { Landing } from './pages/Landing';
 import './styles/global.css';
 
 function App() {
@@ -22,8 +23,8 @@ function App() {
           <Route path="/alocacao" element={<ProtectedRoute><Allocation /></ProtectedRoute>} />
           <Route path="/proventos" element={<ProtectedRoute><Dividends /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
