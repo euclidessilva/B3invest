@@ -92,15 +92,20 @@ cp client/.env.example client/.env
 
 Preencha ambos os arquivos `.env` com suas credenciais:
 
-| Variável | Descrição |
-|----------|-----------|
-| `SUPABASE_URL` | URL do seu projeto Supabase |
-| `SUPABASE_ANON_KEY` | Chave anon (pública) do Supabase |
-| `SUPABASE_SERVICE_KEY` | Chave service_role do Supabase |
-| `BRAPI_TOKEN` | Token da API brapi.dev |
-| `REACT_APP_API_URL` | `http://localhost:3001` (dev) |
-| `REACT_APP_SUPABASE_URL` | Mesmo que `SUPABASE_URL` |
-| `REACT_APP_SUPABASE_ANON_KEY` | Mesmo que `SUPABASE_ANON_KEY` |
+| Variável | Obrigatória | Descrição |
+|----------|:-:|-----------|
+| `SUPABASE_URL` | ✅ | URL do seu projeto Supabase |
+| `SUPABASE_ANON_KEY` | ✅ | Chave anon (pública) do Supabase |
+| `SUPABASE_SERVICE_KEY` | ✅ | Chave service_role do Supabase |
+| `BRAPI_TOKEN` | ✅ | Token da API brapi.dev |
+| `BRAPI_PRO` | ⬜ | `true` se você tem plano pago da brapi (libera dividendos reais). Padrão `false` |
+| `INVITE_KEY` | ✅ | Chave exigida para novos cadastros |
+| `ADMIN_EMAILS` | ⬜ | E-mails (separados por vírgula) com acesso a `/admin` |
+| `REACT_APP_API_URL` | ✅ | `http://localhost:3001` (dev) ou URL pública (prod) |
+| `REACT_APP_SUPABASE_URL` | ✅ | Mesmo que `SUPABASE_URL` |
+| `REACT_APP_SUPABASE_ANON_KEY` | ✅ | Mesmo que `SUPABASE_ANON_KEY` |
+
+> 💡 **Sobre `BRAPI_PRO`** — no plano gratuito da brapi.dev, o histórico de dividendos não está disponível. Quando esta flag está `false`, o calendário de proventos exibe valores **estimados** (DY médio do setor × preço atual ÷ 4) marcados com badge `ESTIMADO`. Após assinar o plano PRO em [brapi.dev/dashboard](https://brapi.dev/dashboard), defina `BRAPI_PRO=true` para usar dados oficiais.
 
 ### 4. Configurar banco de dados (Supabase)
 
