@@ -8,7 +8,7 @@ import { EmptyState } from '../components/EmptyState';
 import { EditStockModal } from '../components/EditStockModal';
 import { ToastContainer } from '../components/Toast';
 import { useToast } from '../hooks/useToast';
-import { getPortfolio, deleteStock, updateStock } from '../services/api';
+import { getPortfolio, deleteStock, updateStock, getSnapshots } from '../services/api';
 
 function fmtBRL(v) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
@@ -19,14 +19,9 @@ function fmtPct(v) {
   return `${sign}${(v || 0).toFixed(2)}%`;
 }
 
-const NEWS = [
-  { cat: 'MERCADO FINANCEIRO', title: 'Ibovespa fecha em alta com otimismo sobre inflação...', body: 'Dados recentes do IPCA trouxeram alívio aos investidores nesta tarde de quarta-feira...' },
-  { cat: 'DIVIDENDOS', title: 'PETR4 anuncia pagamento recorde de dividendos intercalares', body: 'Conselho de administração aprovou valor por ação que supera as expectativas do mercado...' },
-  { cat: 'SETOR BANCÁRIO', title: 'Itaú (ITUB4) reporta lucro líquido superior a R$ 9 bilhões', body: 'Resultado do terceiro trimestre confirma solidez do setor e atrai investidores institucionais...' },
-];
-
 export function Dashboard() {
   const [portfolio, setPortfolio] = useState(null);
+  const [snapshots, setSnapshots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [editStock, setEditStock] = useState(null);
@@ -35,8 +30,12 @@ export function Dashboard() {
 
   const loadPortfolio = useCallback(async (opts = {}) => {
     try {
-      const { data } = await getPortfolio(opts);
+      const [{ data }, { data: snaps }] = await Promise.all([
+        getPortfolio(opts),
+        getSnapshots(2).catch(() => ({ data: [] })),
+      ]);
       setPortfolio(data);
+      setSnapshots(snaps || []);
     } catch (err) {
       toastError('Erro ao carregar portfólio');
     } finally {
@@ -85,6 +84,23 @@ export function Dashboard() {
     return `${acoes} Ações · ${fiis} FIIs`;
   })();
 
+  // Variação do valor investido vs snapshot mais antigo disponível
+  const investedDelta = (() => {
+    if (snapshots.length < 2 || !summary.total_invested) return null;
+    const oldest = snapshots[0];
+    if (!oldest.total_invested || oldest.total_invested === 0) return null;
+    const pct = ((summary.total_invested - oldest.total_invested) / oldest.total_invested) * 100;
+    return { pct, since: oldest.snapshot_date };
+  })();
+
+  const investedSub = (() => {
+    if (loading) return '';
+    if (!summary.total_invested) return 'Sem dados';
+    if (!investedDelta) return 'Coletando histórico...';
+    const sign = investedDelta.pct >= 0 ? '+' : '';
+    return `${sign}${investedDelta.pct.toFixed(2)}% desde os primeiros aportes`;
+  })();
+
   return (
     <>
       <Navbar />
@@ -122,7 +138,7 @@ export function Dashboard() {
           <KPICard
             label="Valor Investido"
             value={loading ? '...' : fmtBRL(summary.total_invested)}
-            sub={summary.total_invested > 0 ? '+2.4% vs. mês anterior' : 'Sem dados'}
+            sub={investedSub}
             icon={
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
@@ -212,20 +228,44 @@ export function Dashboard() {
 
           <div className="card" style={{ position: 'relative' }}>
             <div className="section-header" style={{ marginBottom: 16 }}>
-              <span className="section-title">Notícias Relevantes</span>
-              <div className="section-actions">
-                <button className="fab" style={{ width: 36, height: 36, fontSize: 18 }}>+</button>
+              <span className="section-title">Destaques do Dia</span>
+            </div>
+            {stocks.length === 0 ? (
+              <div style={{ padding: 24, textAlign: 'center', color: 'var(--on-surface-variant)', fontSize: 13 }}>
+                Adicione ações para ver os destaques.
               </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {NEWS.map((n, i) => (
-                <div key={i} style={{ paddingBottom: i < NEWS.length - 1 ? 16 : 0, borderBottom: i < NEWS.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--primary)', textTransform: 'uppercase', marginBottom: 4 }}>{n.cat}</div>
-                  <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: 14, fontWeight: 700, marginBottom: 4, lineHeight: 1.4 }}>{n.title}</div>
-                  <div style={{ fontSize: 12, color: 'var(--on-surface-variant)', lineHeight: 1.5 }}>{n.body}</div>
-                </div>
-              ))}
-            </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {[...stocks]
+                  .sort((a, b) => Math.abs(b.change_pct || 0) - Math.abs(a.change_pct || 0))
+                  .slice(0, 5)
+                  .map((s, i, arr) => {
+                    const positive = (s.change_pct || 0) >= 0;
+                    return (
+                      <div key={s.id} style={{
+                        display: 'flex', alignItems: 'center', gap: 12,
+                        paddingBottom: i < arr.length - 1 ? 14 : 0,
+                        borderBottom: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                      }}>
+                        <div className="ticker-avatar" style={{ width: 36, height: 36, fontSize: 11 }}>
+                          {s.ticker.slice(0, 2)}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontFamily: 'Manrope, sans-serif', fontSize: 14, fontWeight: 700 }}>
+                            {s.ticker}
+                          </div>
+                          <div style={{ fontSize: 12, color: 'var(--on-surface-variant)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {fmtBRL(s.current_price)}
+                          </div>
+                        </div>
+                        <span className={`chip ${positive ? 'chip-profit' : 'chip-loss'}`}>
+                          {fmtPct(s.change_pct)}
+                        </span>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
           </div>
         </div>
       </main>
