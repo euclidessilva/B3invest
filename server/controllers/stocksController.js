@@ -21,15 +21,19 @@ function setCache(key, data) {
   cache.set(key, { data, timestamp: Date.now() });
 }
 
+const BRAPI_PRO = process.env.BRAPI_PRO === 'true';
+
 async function fetchQuote(ticker, force = false) {
   if (!force) {
     const cached = getCached(`quote:${ticker}`);
     if (cached) return cached;
   }
 
-  const { data } = await axios.get(`${BRAPI_URL}/quote/${ticker}`, {
-    params: { token: BRAPI_TOKEN, modules: 'summaryProfile' },
-  });
+  const params = { token: BRAPI_TOKEN, modules: 'summaryProfile' };
+  // Inclui histórico de dividendos apenas em planos pagos da brapi
+  if (BRAPI_PRO) params.dividends = true;
+
+  const { data } = await axios.get(`${BRAPI_URL}/quote/${ticker}`, { params });
 
   const result = data.results?.[0] || null;
   if (result) setCache(`quote:${ticker}`, result);

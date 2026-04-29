@@ -245,6 +245,23 @@ export function Dividends() {
                 <EmptyState title="Nenhum provento agendado" description="Os proventos futuros dos seus ativos aparecerão aqui." />
               ) : (
                 <>
+                  {upcoming.some((d) => d.estimated) && (
+                    <div style={{
+                      display: 'flex', alignItems: 'flex-start', gap: 10,
+                      padding: '12px 14px', marginBottom: 14,
+                      background: 'rgba(255,180,0,0.06)',
+                      border: '1px solid rgba(255,180,0,0.18)',
+                      borderRadius: 8,
+                    }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f5c14f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                      <div style={{ fontSize: 12, color: 'var(--on-surface-variant)', lineHeight: 1.5 }}>
+                        Valores marcados com <strong style={{ color: '#f5c14f' }}>ESTIMADO</strong> são projeções baseadas no DY médio do setor (preço atual × DY ÷ 4).
+                        Não refletem o calendário real do ticker. Para dados oficiais, é necessário plano pago da brapi.dev.
+                      </div>
+                    </div>
+                  )}
                   <div style={{ overflowX: 'auto' }}>
                     <table className="data-table">
                       <thead>
@@ -276,6 +293,19 @@ export function Dividends() {
                                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                     <div className="ticker-avatar">{(d.ticker || '??').slice(0, 2)}</div>
                                     <span style={{ fontWeight: 700 }}>{d.ticker}</span>
+                                    {d.estimated && (
+                                      <span
+                                        title="Valor estimado pelo DY médio do setor — não é dado oficial"
+                                        style={{
+                                          fontSize: 9, fontWeight: 700, letterSpacing: '0.06em',
+                                          padding: '2px 6px', borderRadius: 4,
+                                          background: 'rgba(255,180,0,0.12)', color: '#f5c14f',
+                                          border: '1px solid rgba(255,180,0,0.2)',
+                                        }}
+                                      >
+                                        ESTIMADO
+                                      </span>
+                                    )}
                                   </div>
                                 </td>
                                 <td style={{ color: 'var(--on-surface-variant)' }}>{fmtDate(d.com_date)}</td>
