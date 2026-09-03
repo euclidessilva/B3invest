@@ -39,10 +39,10 @@ if (fs.existsSync(indexHtml)) {
 } else {
   console.warn(`[server] client/build não encontrado — apenas API está ativa.`);
   app.get('/', (_req, res) =>
-    res.status(503).send('B3 Invest: build do React ausente. Execute "npm run build".')
+    res.status(503).send('RitaInvest: build do React ausente. Execute "npm run build".')
   );
 }
 
 app.listen(PORT, () => {
-  console.log(`B3 Invest server running on port ${PORT}`);
+  console.log(`RitaInvest server running on port ${PORT}`);
 });

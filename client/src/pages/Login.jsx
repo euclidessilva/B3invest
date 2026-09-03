@@ -35,7 +35,7 @@ export function Login() {
               <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
               <polyline points="17 6 23 6 23 12"/>
             </svg>
-            <div className="login-logo">B3 Invest</div>
+            <div className="login-logo">RitaInvest</div>
             <div className="login-tagline">Sua jornada rumo à liberdade financeira começa aqui.</div>
           </div>
 

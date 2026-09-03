@@ -238,7 +238,7 @@ function InsightsCard() {
           Insights em Tempo Real
         </div>
         <p style={{ fontSize: 13, color: 'var(--on-surface-variant)', lineHeight: 1.6, marginBottom: 14 }}>
-          Mantenha sua carteira diversificada. O B3 Invest recomenda não concentrar mais de 10% do seu capital em um único ticker.
+          Mantenha sua carteira diversificada. O RitaInvest recomenda não concentrar mais de 10% do seu capital em um único ticker.
         </p>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
           <span style={{ fontSize: 16 }}>💡</span>

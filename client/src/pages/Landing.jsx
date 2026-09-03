@@ -13,7 +13,7 @@ export function Landing() {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4edea3" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
             </svg>
-            B3 Invest
+            RitaInvest
           </Link>
           <div className="landing-nav-actions">
             {user ? (
@@ -68,7 +68,7 @@ export function Landing() {
                 <span className="preview-dot red" />
                 <span className="preview-dot yellow" />
                 <span className="preview-dot green" />
-                <span style={{ marginLeft: 12, fontSize: 12, color: 'var(--on-surface-variant)' }}>b3invest.app/dashboard</span>
+                <span style={{ marginLeft: 12, fontSize: 12, color: 'var(--on-surface-variant)' }}>ritainvest.app/dashboard</span>
               </div>
               <div className="preview-content">
                 <div className="preview-kpis">
@@ -210,7 +210,7 @@ export function Landing() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4edea3" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
               </svg>
-              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, color: 'var(--on-surface)' }}>B3 Invest</span>
+              <span style={{ fontFamily: 'Manrope, sans-serif', fontWeight: 700, color: 'var(--on-surface)' }}>RitaInvest</span>
               <span>© {new Date().getFullYear()}</span>
             </div>
             <div style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>

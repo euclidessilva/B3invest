@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://img.icons8.com/color/96/stocks.png" alt="B3 Invest Logo" width="80" />
+  <img src="https://img.icons8.com/color/96/stocks.png" alt="RitaInvest Logo" width="80" />
 </p>
 
-<h1 align="center">B3 Invest</h1>
+<h1 align="center">RitaInvest</h1>
 
 <p align="center">
   <strong>📈 Gerenciador de Carteira da Bolsa de Valores Brasileira</strong>
@@ -29,7 +29,7 @@
 
 ## Sobre
 
-**B3 Invest** é uma aplicação web full-stack para gerenciar sua carteira de ações da B3 (Bolsa de Valores brasileira). Acompanhe suas ações, visualize a evolução do patrimônio, analise a alocação da carteira e monitore seus dividendos — tudo em um dashboard moderno e responsivo.
+**RitaInvest** é uma aplicação web full-stack para gerenciar sua carteira de ações da B3 (Bolsa de Valores brasileira). Acompanhe suas ações, visualize a evolução do patrimônio, analise a alocação da carteira e monitore seus dividendos — tudo em um dashboard moderno e responsivo.
 
 ---
 
@@ -70,8 +70,8 @@
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/euclidessilva/B3invest.git
-cd B3invest
+git clone https://github.com/euclidessilva/RitaInvest.git
+cd RitaInvest
 ```
 
 ### 2. Instalar dependências
@@ -202,7 +202,7 @@ O servidor Express serve o build do React e a API REST na porta `3001`.
 ## Estrutura do Projeto
 
 ```
-B3invest/
+RitaInvest/
 ├── client/                     # Frontend React
 │   ├── public/                 # Assets estáticos
 │   ├── src/

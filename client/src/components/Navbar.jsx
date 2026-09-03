@@ -19,7 +19,7 @@ export function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <NavLink to="/dashboard" className="nav-logo">B3 Invest</NavLink>
+        <NavLink to="/dashboard" className="nav-logo">RitaInvest</NavLink>
 
         <div className="nav-links">
           <NavLink to="/dashboard" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>

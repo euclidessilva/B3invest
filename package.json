@@ -1,5 +1,5 @@
 {
-  "name": "b3invest",
+  "name": "ritainvest",
   "version": "1.0.0",
   "description": "Gerenciador de Carteira da Bolsa de Valores Brasileira",
   "main": "server/index.js",
